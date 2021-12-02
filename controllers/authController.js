@@ -184,6 +184,59 @@ const allAdminUsers = catchAsync(async (req, res) => {
   });
 });
 
+// Get user details  =>   /api/admin/users/:id
+const getUserDetails = catchAsync(async (req, res) => {
+  const user = await User.findById(req.query.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found with this ID.", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// Update user details  =>   /api/admin/users/:id
+const updateUser = catchAsync(async (req, res) => {
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
+
+  const user = await User.findByIdAndUpdate(req.query.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
+// Delete user    =>   /api/admin/users/:id
+const deleteUser = catchAsync(async (req, res) => {
+  const user = await User.findById(req.query.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found with this ID.", 404));
+  }
+
+  // Remove avatar
+  const image_id = user.avatar.public_id;
+  if (image_id) await cloudinary.v2.uploader.destroy(image_id);
+
+  await user.remove();
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
 export {
   registerUser,
   currentUserProfile,
@@ -191,4 +244,7 @@ export {
   forgotPassword,
   resetPassword,
   allAdminUsers,
+  getUserDetails,
+  updateUser,
+  deleteUser,
 };

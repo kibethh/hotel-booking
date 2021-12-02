@@ -106,23 +106,38 @@ export const loadedUserReducer = (
 export const userReducer = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_PROFILE_REQUEST:
+    case UPDATE_USER_REQUEST:
+    case DELETE_USER_REQUEST:
       return {
         loading: true,
-        isAuthenticated: false,
       };
 
     case UPDATE_PROFILE_SUCCESS:
+    case UPDATE_USER_SUCCESS:
       return {
         loading: false,
         isUpdated: action.payload,
       };
+    case DELETE_USER_SUCCESS:
+      return {
+        loading: false,
+        isDeleted: action.payload,
+      };
     case UPDATE_PROFILE_RESET:
+    case UPDATE_USER_RESET:
       return {
         loading: false,
         isUpdated: false,
       };
+    case DELETE_USER_RESET:
+      return {
+        loading: false,
+        isDeleted: false,
+      };
 
     case UPDATE_PROFILE_FAIL:
+    case UPDATE_USER_FAIL:
+    case DELETE_USER_FAIL:
       return {
         loading: false,
         error: action.payload,
@@ -132,6 +147,39 @@ export const userReducer = (state = {}, action) => {
         ...state,
         error: null,
       };
+    default:
+      return state;
+  }
+};
+
+// USER DETAILS REDUCER
+
+export const userDetailsReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_DETAILS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case USER_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        user: action.payload,
+      };
+
+    case USER_DETAILS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
     default:
       return state;
   }

@@ -16,8 +16,8 @@ dbConnect();
 
 handler.use(isAuthenticatedUser).patch(createRoomReview);
 
-// handler.use(isAuthenticatedUser).get(getRoomReviews);
+handler.use(isAuthenticatedUser).get(getRoomReviews);
 
-// handler.use(isAuthenticatedUser).delete(deleteReview);
+handler.use(isAuthenticatedUser).delete(deleteReview);
 
 export default handler;

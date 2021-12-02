@@ -238,3 +238,71 @@ export const checkReviewReducer = (
       return state;
   }
 };
+
+// ROOM REVIEW REDUCER
+export const roomReviewsReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case GET_REVIEWS_REQUEST:
+      return {
+        loading: true,
+      };
+
+    case GET_REVIEWS_SUCCESS:
+      return {
+        loading: false,
+        reviews: action.payload,
+      };
+
+    case GET_REVIEWS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+// REVEIW REDUCER
+
+export const reviewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_REVIEW_REQUEST:
+      return {
+        loading: true,
+      };
+
+    case DELETE_REVIEW_SUCCESS:
+      return {
+        loading: false,
+        isDeleted: action.payload,
+      };
+
+    case DELETE_REVIEW_RESET:
+      return {
+        loading: false,
+        isDeleted: false,
+      };
+
+    case DELETE_REVIEW_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
