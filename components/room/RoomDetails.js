@@ -15,6 +15,11 @@ import {
   getBookedDates,
 } from "../../redux/actions/bookingActions";
 import { CHECK_BOOKING_RESET } from "../../redux/constants/bookingConstants";
+// import { dataIntoReqbody } from "../../middlewares/paymentData";
+// import {
+//   lipaNaMpesaOnline,
+//   getOAuthToken,
+// } from "../../redux/actions/paymentActions";
 
 import RoomFeatures from "./RoomFeatures";
 import ListReviews from "../review/ListReviews";
@@ -23,6 +28,7 @@ const RoomDetails = () => {
   const [checkInDate, setCheckInDate] = useState();
   const [checkOutDate, setCheckOutDate] = useState();
   const [daysOfStay, setDaysOfStay] = useState();
+  const [phone, setPhone] = useState("");
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -34,7 +40,10 @@ const RoomDetails = () => {
   const { available, loading: bookingLoading } = useSelector(
     (state) => state.checkBooking
   );
-  console.log(dates);
+  const { loading, accessToken } = useSelector(
+    (state) => state.paymentAuthorization
+  );
+  const { isPaid } = useSelector((state) => state.payment);
 
   const excludedDates = [];
   dates.length > 0 &&
@@ -62,38 +71,85 @@ const RoomDetails = () => {
       );
     }
   };
-
+  
   const newBookingHandler = async () => {
-    const bookingData = {
-      room: router.query.id,
-      checkInDate,
-      checkOutDate,
-      daysOfStay,
-      amountPaid: 90,
-      paymentInfo: {
-        id: "M-PESA_TRANSACTION_ID",
-        status: "M-PESA_PAYMENT_STATUS",
-      },
-    };
-
+    
     try {
+      const PhoneNumber = "254" + phone.slice(1);
+
+      const bookingData = {
+        room: router.query.id,
+        checkInDate,
+        checkOutDate,
+        PhoneNumber,
+        daysOfStay,
+        amountPaid: 90,
+        paymentInfo: {
+          id: "M-PESA_TRANSACTION_ID",
+          status: "M-PESA_PAYMENT_STATUS",
+        },
+      };
+      // end of booking data
+      const today = new Date();
+      const date =
+        today.getFullYear() +
+        ("0" + (today.getMonth() + 1)).slice(-2) +
+        ("0" + today.getDate()).slice(-2);
+      const time =
+        today.getHours().toString() +
+        today.getMinutes().toString() +
+        today.getSeconds().toString();
+      const Timestamp = date + time;
+
+      let buffer = new Buffer.from(
+        process.env.BusinessShortCode + process.env.PassKey + Timestamp
+      );
+
+      let Password = buffer.toString("base64");
+
+      const paymentData = {
+        BusinessShortCode: 174379,
+        Password,
+        Timestamp,
+        TransactionType: "CustomerPayBillOnline",
+        Amount: 1,
+        PartyA: PhoneNumber,
+        PartyB: 174379,
+        PhoneNumber,
+        CallBackURL: process.env.CallBackURL + "/api/payment/status",
+        AccountReference: "test",
+        passKey: process.env.PassKey,
+        TransactionDesc: "test",
+      };
+
+      const bookPay = {
+        bookingData,
+        paymentData,
+      };
+
       const config = {
         headers: {
           "Content-Type": "application/json",
         },
       };
+      // console.log(bookPay);
 
-      const { data } = await axios.post("/api/bookings", bookingData, config);
+      const { data } = await axios.post("/api/payment", bookPay, config);
       console.log(data);
     } catch (error) {
       console.log(error.response);
     }
   };
 
+  
   useEffect(() => {
     dispatch(getBookedDates(roomId));
+    if(error){
+
     toast.error(error);
     dispatch(clearErrors);
+    }
+   
   }, [dispatch, error, roomId]);
   return (
     <>
@@ -113,7 +169,7 @@ const RoomDetails = () => {
           </div>
           <span id="no_of_reviews">({room.numOfReviews} Reviews)</span>
         </div>
-        {/* 
+        
         <Carousel hover="pause">
           {room.images &&
             room.images.map((image) => (
@@ -128,7 +184,7 @@ const RoomDetails = () => {
                 </div>
               </Carousel.Item>
             ))}
-        </Carousel> */}
+        </Carousel>
 
         <div className="row my-5">
           <div className="col-12 col-md-6 col-lg-8">
@@ -172,12 +228,27 @@ const RoomDetails = () => {
                 </div>
               )}
               {available && user && (
-                <button
-                  className="btn btn-block py-3 booking-btn"
-                  onClick={newBookingHandler}
-                >
-                  Pay
-                </button>
+                <>
+                  <div className="form-group">
+                    <label htmlFor="phone_field">Enter Your Phone Number</label>
+                    <input
+                      type="number"
+                      id="phone_field"
+                      className="form-control"
+                      value={phone}
+                      placeholder="e.g 0712345678 10+ characters"
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    className="btn btn-block py-3 booking-btn"
+                    onClick={newBookingHandler}
+                   style={{display:`${phone.length<10?"none":"block"}`}}
+                  >
+                  
+                    Pay To Book
+                  </button>
+                </>
               )}
             </div>
           </div>

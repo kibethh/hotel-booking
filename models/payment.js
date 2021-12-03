@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const bookingSchema = new mongoose.Schema({
+const PaymentSchema = new mongoose.Schema({
   room: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -11,35 +11,23 @@ const bookingSchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
+  PhoneNumber: {
+    type: Number,
+    required: [true,"Phone Number is required"],
+  },
   checkInDate: {
-    dateIn: {
       type: Date,
       required: true,
-    },
-    offset: {
-      type: Number,
-      required: true,
-    },
   },
   checkOutDate: {
-    dateOut: {
-      type: Date,
-      required: true,
-    },
-    offset: {
-      type: Number,
-      required: true,
-    },
+    type: Date,
+    required: true,
   },
   amountPaid: {
     type: Number,
     required: true,
   },
   daysOfStay: {
-    type: Number,
-    required: true,
-  },
-  phone: {
     type: Number,
     required: true,
   },
@@ -63,5 +51,5 @@ const bookingSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.models.Booking ||
-  mongoose.model("Booking", bookingSchema);
+export default mongoose.models.Payment ||
+  mongoose.model("Payment", PaymentSchema);

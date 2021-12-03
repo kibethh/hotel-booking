@@ -27,7 +27,7 @@ const Header = () => {
               <a>
                 <Image
                   // style={{ cursor: "pointer" }}
-                  src="/images/bookit_logo.png"
+                  src="/images/booking.png"
                   alt="BookIT"
                   width="100%"
                   height="100%"

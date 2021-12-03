@@ -1,4 +1,5 @@
 import nc from "next-connect";
+import cors from "cors";
 import dbConnect from "../../../config/dbConnect";
 import onError from "../../../middlewares/errors";
 import { isAuthenticatedUser, authorizeRoles } from "../../../middlewares/auth";

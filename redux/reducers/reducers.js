@@ -26,6 +26,7 @@ import {
   allUsersReducer,
   userDetailsReducer,
 } from "./userReducers";
+import { paymentAuthorizationReducer, paymentReducer } from "./paymentReducer";
 
 const reducers = combineReducers({
   allRooms: allRoomsReducer,
@@ -47,6 +48,8 @@ const reducers = combineReducers({
   checkReview: checkReviewReducer,
   roomReviews: roomReviewsReducer,
   review: reviewReducer,
+  paymentAuthorization: paymentAuthorizationReducer,
+  payment: paymentReducer,
 });
 
 export default reducers;

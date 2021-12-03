@@ -1,16 +1,49 @@
 import crypto from "crypto";
+import { Mpesa } from "mpesa-api";
+
 import Booking from "../models/booking";
+import Payment from "../models/payment";
 import ErrorHandler from "../utils/errorHandler";
 import catchAsync from "../middlewares/catchAsyncErrors";
 import Moment from "moment";
+
 import { extendMoment } from "moment-range";
 
 const moment = extendMoment(Moment);
 
 // CREATE NEW BOOKING => /api/bookings
+
 const newBooking = catchAsync(async (req, res) => {
-  let { room, checkInDate, checkOutDate, daysOfStay, amountPaid, paymentInfo } =
-    req.body;
+  // FROM MPESA
+  const {
+    Body: {
+      stkCallback: { CallbackMetadata },
+    },
+  } = req.body;
+
+  if (CallbackMetadata) {
+    const {
+      Body: {
+        stkCallback: {
+          CallbackMetadata: { Item },
+        },
+      },
+    } = req.body;
+
+    // Object to insert array items
+    const newObj = {};
+    Item.forEach((ob) => {
+      if (ob.Value) newObj[ob.Name] = ob.Value;
+    });
+
+
+      const bookingData= await Payment.find({PhoneNumber:newObj.PhoneNumber})
+  // console.log("Booking data",bookingData)
+  await Payment.deleteMany({PhoneNumber:newObj.PhoneNumber})
+
+// configuring booking data
+let { room,userId, checkInDate, checkOutDate, daysOfStay, amountPaid, paymentInfo } =
+    bookingData[0];
 
   checkInDate = {
     dateIn: checkInDate,
@@ -20,23 +53,29 @@ const newBooking = catchAsync(async (req, res) => {
     dateOut: checkOutDate,
     offset: new Date(checkOutDate).getTimezoneOffset(),
   };
-
-  const booking = await Booking.create({
-    userId: req.user._id,
+  // Creating a new booking
+  const booking= await Booking.create({
+    userId,
     room,
     checkInDate,
     checkOutDate,
+    phone:newObj.PhoneNumber,
     daysOfStay,
-    amountPaid,
-    paymentInfo,
-    paidAt: Date.now(),
+    amountPaid:newObj.Amount,
+    paymentInfo:{
+      id:newObj.MpesaReceiptNumber,
+      status:"success"
+    },
+    paidAt: newObj.TransactionDate,
   });
+
+  }
 
   res.status(201).json({
     success: true,
-    booking,
   });
 });
+
 // CHECK ROOM BOOKING AVAILABILITY => /api/bookings/check
 const checkRoomBookingAvailability = catchAsync(async (req, res) => {
   let { roomId, checkInDate, checkOutDate } = req.query;
@@ -186,6 +225,41 @@ const deleteBooking = catchAsync(async (req, res, next) => {
   });
 });
 
+// // Payment
+const lipaNaMpesaOnline = catchAsync(async (req, res, next) => {
+  console.log(req.user)
+  let paymentData = req.paymentData;
+  let bookingData = req.bookingData;
+  
+console.log(bookingData)
+  const credentials = {
+    clientKey: process.env.MPESA_CONSUMER_KEY,
+    clientSecret: process.env.MPESA_CONSUMER_SECRET,
+    initiatorPassword: process.env.InitiatorPassword,
+    // securityCredential: "YOUR_SECURITY_CREDENTIAL",
+    certificatePath: null,
+  };
+
+  const environment = "sandbox";
+  const mpesa = new Mpesa(credentials, environment);
+  await mpesa.lipaNaMpesaOnline({
+    ...paymentData,
+  });
+//  Deleting previous data
+  await Payment.deleteMany({PhoneNumber: Number(bookingData.PhoneNumber)})
+  // This is temporary data
+   await Payment.create({
+     userId: req.user._id,
+ ...bookingData
+
+});
+  res.status(200).json({
+    success: true,
+  });
+});
+
+
+
 export {
   newBooking,
   checkRoomBookingAvailability,
@@ -194,4 +268,5 @@ export {
   bookingDetails,
   allAdminBookings,
   deleteBooking,
+  lipaNaMpesaOnline,
 };

@@ -137,7 +137,6 @@ export const bookingDetailsReducer = (state = { booking: {} }, action) => {
 };
 
 // DELETE BOOKING REDUCER
-
 export const bookingReducer = (state = {}, action) => {
   switch (action.type) {
     case DELETE_BOOKING_REQUEST:

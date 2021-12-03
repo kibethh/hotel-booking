@@ -1,102 +1,111 @@
-import Room from '../models/room'
-import User from '../models/user'
-import Booking from '../models/booking'
-import getRawBody from 'raw-body'
+// const prettyjson = require("prettyjson");
+// const stringify = require("json-stable-stringify");
+// const axios = require("axios");
+// const Booking = require("../models/booking");
+// const catchAsync = require("../utils/catchAsync");
+// const APIFeatures = require("../utils/apiFeatures");
+// const AppError = require("../utils/appError");
 
-import catchAsyncErrors from '../middlewares/catchAsyncErrors'
-import absoluteUrl from 'next-absolute-url'
+import Booking from "../models/booking";
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+export const paymentStatus = catchAsync(async (req, res, next) => {
+  const {
+    Body: {
+      stkCallback: { CallbackMetadata },
+    },
+  } = req.body;
 
-// Generate stripe checkout session   =>   /api/checkout_session/:roomId
-const stripCheckoutSession = catchAsyncErrors(async (req, res) => {
+  if (CallbackMetadata) {
+    const {
+      Body: {
+        stkCallback: {
+          CallbackMetadata: { Item },
+        },
+      },
+    } = req.body;
 
-    // Get room details
-    const room = await Room.findById(req.query.roomId);
+    // Object to insert array items
+    const newObj = {};
+    Item.forEach((ob) => {
+      if (ob.Value) newObj[ob.Name] = ob.Value;
+    });
 
-    const { checkInDate, checkOutDate, daysOfStay } = req.query;
+    await Payment.create({
+      amount: newObj.Amount,
+      transactionId: newObj.MpesaReceiptNumber,
+      transactionDate: newObj.TransactionDate,
+      phone: newObj.PhoneNumber,
+    });
+  }
 
-    // Get origin
-    const { origin } = absoluteUrl(req);
+  res.status(200).json({
+    success: true,
+    //   ResultDesc,
+  });
+});
 
-    // Create stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        success_url: `${origin}/bookings/me`,
-        cancel_url: `${origin}/room/${room._id}`,
-        customer_email: req.user.email,
-        client_reference_id: req.query.roomId,
-        metadata: { checkInDate, checkOutDate, daysOfStay },
-        line_items: [
-            {
-                name: room.name,
-                images: [`${room.images[0].url}`],
-                amount: req.query.amount * 100,
-                currency: 'usd',
-                quantity: 1
-            }
-        ]
-    })
+// Creating a booking after payment
+export const newBooking = catchAsync(async (req, res) => {
+  let { room, checkInDate, checkOutDate, daysOfStay, amountPaid, paymentInfo } =
+    req.body;
 
-    res.status(200).json(session)
+  checkInDate = {
+    dateIn: checkInDate,
+    offset: new Date(checkInDate).getTimezoneOffset(),
+  };
+  checkOutDate = {
+    dateOut: checkOutDate,
+    offset: new Date(checkOutDate).getTimezoneOffset(),
+  };
 
-})
+  // FROM MPESA
+  const {
+    Body: {
+      stkCallback: { CallbackMetadata },
+    },
+  } = req.body;
 
+  if (CallbackMetadata) {
+    const {
+      Body: {
+        stkCallback: {
+          CallbackMetadata: { Item },
+        },
+      },
+    } = req.body;
 
-// Create new booking after payment   =>   /api/webhook
-const webhookCheckout = catchAsyncErrors(async (req, res) => {
+    // Object to insert array items
+    const newObj = {};
+    Item.forEach((ob) => {
+      if (ob.Value) newObj[ob.Name] = ob.Value;
+    });
 
-    const rawBody = await getRawBody(req);
+    // await Payment.create({
+    //   amount: newObj.Amount,
+    //   transactionId: newObj.MpesaReceiptNumber,
+    //   transactionDate: newObj.TransactionDate,
+    //   phone: newObj.PhoneNumber,
+    // });
+  }
+  amountPaid = newObj.Amount;
+  paymentInfo = {
+    id: newObj.MpesaReceiptNumber,
+    status: "M-PESA_PAYMENT_STATUS",
+  };
 
-    try {
+  const booking = await Booking.create({
+    userId: req.user._id,
+    room,
+    checkInDate,
+    checkOutDate,
+    daysOfStay,
+    amountPaid,
+    paymentInfo,
+    paidAt: newObj.TransactionDate,
+  });
 
-        const signature = req.headers['stripe-signature']
-
-        const event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
-
-        if (event.type === 'checkout.session.completed') {
-
-            const session = event.data.object;
-
-            const room = session.client_reference_id;
-            const user = (await User.findOne({ email: session.customer_email })).id;
-
-            const amountPaid = session.amount_total / 100;
-
-            const paymentInfo = {
-                id: session.payment_intent,
-                status: session.payment_status
-            }
-
-            const checkInDate = session.metadata.checkInDate
-            const checkOutDate = session.metadata.checkOutDate
-            const daysOfStay = session.metadata.daysOfStay
-
-            const booking = await Booking.create({
-                room,
-                user,
-                checkInDate,
-                checkOutDate,
-                daysOfStay,
-                amountPaid,
-                paymentInfo,
-                paidAt: Date.now()
-            })
-
-            res.status(200).json({ success: true })
-
-        }
-
-
-
-    } catch (error) {
-        console.log('Error in Stripe Checkout Payment => ', error);
-    }
-
-})
-
-
-export {
-    stripCheckoutSession,
-    webhookCheckout
-}
+  res.status(201).json({
+    success: true,
+    booking,
+  });
+});
