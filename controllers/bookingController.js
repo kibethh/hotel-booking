@@ -74,11 +74,10 @@ const newBooking = catchAsync(async (req, res) => {
       },
       paidAt: newObj.TransactionDate,
     });
-    res.redirect(`/rooms/${booking.room}`);
   }
 
-  res.status(400).json({
-    success: false,
+  res.status(200).json({
+    success: true,
   });
 });
 
