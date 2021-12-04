@@ -11,10 +11,48 @@ import { extendMoment } from "moment-range";
 
 const moment = extendMoment(Moment);
 
+//  NEW BOOKING BY ADMIN => /api/bookings
+const adminNewBooking = catchAsync(async (req, res) => {
+  let {
+    room,
+    phone,
+    checkInDate,
+    checkOutDate,
+    daysOfStay,
+    amountPaid,
+    paymentInfo,
+  } = req.body;
+
+  checkInDate = {
+    dateIn: checkInDate,
+    offset: new Date(checkInDate).getTimezoneOffset(),
+  };
+  checkOutDate = {
+    dateOut: checkOutDate,
+    offset: new Date(checkOutDate).getTimezoneOffset(),
+  };
+
+  const booking = await Booking.create({
+    userId: req.user._id,
+    room,
+    phone,
+    checkInDate,
+    checkOutDate,
+    daysOfStay,
+    amountPaid,
+    paymentInfo,
+    paidAt: Date.now(),
+  });
+
+  res.status(201).json({
+    success: true,
+    booking,
+  });
+});
+
 // CREATE NEW BOOKING => /api/bookings
 
 const newBooking = catchAsync(async (req, res) => {
-  console.log(req.body);
   // FROM MPESA
   const {
     Body: {
@@ -264,6 +302,7 @@ const lipaNaMpesaOnline = catchAsync(async (req, res, next) => {
 });
 
 export {
+  adminNewBooking,
   newBooking,
   checkRoomBookingAvailability,
   checkRoomBookedDates,

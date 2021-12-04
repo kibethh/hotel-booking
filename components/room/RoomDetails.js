@@ -31,6 +31,8 @@ const RoomDetails = () => {
   const [checkOutDate, setCheckOutDate] = useState();
   const [daysOfStay, setDaysOfStay] = useState();
   const [phone, setPhone] = useState("");
+  const [idNum, setIdNum] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -42,10 +44,6 @@ const RoomDetails = () => {
   const { available, loading: bookingLoading } = useSelector(
     (state) => state.checkBooking
   );
-  const { loading, accessToken } = useSelector(
-    (state) => state.paymentAuthorization
-  );
-  const { isPaid } = useSelector((state) => state.payment);
 
   const excludedDates = [];
   dates.length > 0 &&
@@ -146,7 +144,35 @@ const RoomDetails = () => {
       console.log(error.response);
     }
   };
+  const adminBookingHandler = async (e) => {
+    e.target.innerHTML = "Booking...";
+    e.target.disabled = "true";
+    const bookingData = {
+      room: router.query.id,
+      phone: clientPhone,
+      checkInDate,
+      checkOutDate,
+      daysOfStay,
+      amountPaid: 90,
+      paymentInfo: {
+        id: idNum,
+        status: "by_admin",
+      },
+    };
 
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const { data } = await axios.post("/api/bookings", bookingData, config);
+      console.log(data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
   useEffect(() => {
     dispatch(getBookedDates(roomId));
     if (error) {
@@ -157,7 +183,7 @@ const RoomDetails = () => {
   return (
     <>
       <Head>
-        <title>{room.name} - BookIT</title>
+        <title>{room.name} - Room Booking</title>
       </Head>
       <div className="container container-fluid">
         <h2 className="mt-5">{room.name}</h2>
@@ -254,6 +280,45 @@ const RoomDetails = () => {
                   >
                     Pay To Book
                   </button>
+                </>
+              )}
+              {available && user && user.role === "admin" && (
+                <>
+                  <div className="form-group">
+                    <label htmlFor="id_field">Client's ID Number</label>
+                    <input
+                      type="number"
+                      id="id_field"
+                      className="form-control"
+                      value={idNum}
+                      placeholder="Client's ID Number"
+                      onChange={(e) => setIdNum(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="client_phone_field">
+                      Client's Phone Number
+                    </label>
+                    <input
+                      type="number"
+                      id="client_phone_field"
+                      className="form-control"
+                      value={clientPhone}
+                      placeholder="e.g 0712345678 10+ characters"
+                      onChange={(e) => setClientPhone(e.target.value)}
+                    />
+                  </div>
+                  {idNum.length >= 7 &&
+                    idNum.length <= 11 &&
+                    clientPhone.length >= 10 &&
+                    clientPhone.length < 15 && (
+                      <button
+                        className="btn btn-block py-3 booking-btn"
+                        onClick={adminBookingHandler}
+                      >
+                        Book for A Client
+                      </button>
+                    )}
                 </>
               )}
             </div>
