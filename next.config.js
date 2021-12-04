@@ -25,7 +25,6 @@ module.exports = {
     MPESA_CONSUMER_SECRET: "ThzdZ6IwdvgPWmbl",
     TOKEN_URL:
       "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
-    CallBackURL: "https://hotel-booking-kibethh.vercel.app",
     InitiatorName: "testapi",
     InitiatorPassword: "Safaricom999!",
     PartyA: 600999,

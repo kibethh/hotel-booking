@@ -121,7 +121,8 @@ const RoomDetails = () => {
         PartyA: PhoneNumber,
         PartyB: 174379,
         PhoneNumber,
-        CallBackURL: process.env.CallBackURL + "/api/payment/status",
+        CallBackURL:
+          "https://hotel-booking-kibethh.vercel.app/api/payment/status",
         AccountReference: "test",
         passKey: process.env.PassKey,
         TransactionDesc: "test",

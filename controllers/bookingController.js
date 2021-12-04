@@ -14,6 +14,7 @@ const moment = extendMoment(Moment);
 // CREATE NEW BOOKING => /api/bookings
 
 const newBooking = catchAsync(async (req, res) => {
+  console.log(req.body);
   // FROM MPESA
   const {
     Body: {
