@@ -139,7 +139,8 @@ const RoomDetails = () => {
       // console.log(bookPay);
 
       const { data } = await axios.post("/api/payment", bookPay, config);
-      console.log(data);
+      toast.loading("Transaction Initiated!!");
+      setTimeout(() => router.push("/rooms"), 5000);
     } catch (error) {
       console.log(error.response);
     }
@@ -168,7 +169,8 @@ const RoomDetails = () => {
       };
 
       const { data } = await axios.post("/api/bookings", bookingData, config);
-      console.log(data);
+      toast.success("Room Booked Successfully!!");
+      router.reload(window.location.pathname);
     } catch (error) {
       console.log(error.response);
     }

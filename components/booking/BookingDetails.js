@@ -21,7 +21,8 @@ const BookingDetails = () => {
   }, [dispatch, booking]);
 
   const isPaid =
-    booking.paymentInfo && booking.paymentInfo.status === "success"
+    (booking.paymentInfo && booking.paymentInfo.status === "success") ||
+    booking.paymentInfo.status === "by_admin"
       ? true
       : false;
 
