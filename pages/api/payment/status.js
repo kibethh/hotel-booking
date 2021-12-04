@@ -6,13 +6,11 @@ import { mpesaCallback } from "../../../middlewares/payment";
 // import { dataIntoReqbody } from "../../../middlewares/paymentData";
 import {
   newBooking,
-  testBooking,
 } from "../../../controllers/bookingController";
 
 const handler = nc({ onError });
 dbConnect();
 
 handler.post(newBooking);
-// handler.post(testBooking);
 
 export default handler;

@@ -4,7 +4,6 @@ import onError from "../../../middlewares/errors";
 import { isAuthenticatedUser } from "../../../middlewares/auth";
 import { bookingDataAndPaymentData } from "../../../middlewares/payment";
 // import { dataIntoReqbody } from "../../../middlewares/paymentData";
-import { newBooking } from "../../../controllers/bookingController";
 
 import { lipaNaMpesaOnline } from "../../../controllers/bookingController";
 
