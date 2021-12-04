@@ -118,13 +118,18 @@ const dbConnect = () => {
     return;
   }
 
-  const DB = "mongodb://127.0.0.1:27017/hotelBooking";
+  // const DB = "mongodb://127.0.0.1:27017/hotelBooking";
+
+  // const DB = process.env.MONGODB_ONLINE_URL;
 
   mongoose
-    .connect(DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(
+      "mongodb+srv://humphrey:12database12@cluster0.pudlj.mongodb.net/hotelbooking?retryWrites=true&w=majority",
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    )
     .then(() => console.log("connected"));
 };
 

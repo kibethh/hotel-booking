@@ -36,43 +36,49 @@ const newBooking = catchAsync(async (req, res) => {
       if (ob.Value) newObj[ob.Name] = ob.Value;
     });
 
+    const bookingData = await Payment.find({ PhoneNumber: newObj.PhoneNumber });
+    // console.log("Booking data",bookingData)
+    await Payment.deleteMany({ PhoneNumber: newObj.PhoneNumber });
 
-      const bookingData= await Payment.find({PhoneNumber:newObj.PhoneNumber})
-  // console.log("Booking data",bookingData)
-  await Payment.deleteMany({PhoneNumber:newObj.PhoneNumber})
+    // configuring booking data
+    let {
+      room,
+      userId,
+      checkInDate,
+      checkOutDate,
+      daysOfStay,
+      amountPaid,
+      paymentInfo,
+    } = bookingData[0];
 
-// configuring booking data
-let { room,userId, checkInDate, checkOutDate, daysOfStay, amountPaid, paymentInfo } =
-    bookingData[0];
-
-  checkInDate = {
-    dateIn: checkInDate,
-    offset: new Date(checkInDate).getTimezoneOffset(),
-  };
-  checkOutDate = {
-    dateOut: checkOutDate,
-    offset: new Date(checkOutDate).getTimezoneOffset(),
-  };
-  // Creating a new booking
-  const booking= await Booking.create({
-    userId,
-    room,
-    checkInDate,
-    checkOutDate,
-    phone:newObj.PhoneNumber,
-    daysOfStay,
-    amountPaid:newObj.Amount,
-    paymentInfo:{
-      id:newObj.MpesaReceiptNumber,
-      status:"success"
-    },
-    paidAt: newObj.TransactionDate,
-  });
-
+    checkInDate = {
+      dateIn: checkInDate,
+      offset: new Date(checkInDate).getTimezoneOffset(),
+    };
+    checkOutDate = {
+      dateOut: checkOutDate,
+      offset: new Date(checkOutDate).getTimezoneOffset(),
+    };
+    // Creating a new booking
+    const booking = await Booking.create({
+      userId,
+      room,
+      checkInDate,
+      checkOutDate,
+      phone: newObj.PhoneNumber,
+      daysOfStay,
+      amountPaid: newObj.Amount,
+      paymentInfo: {
+        id: newObj.MpesaReceiptNumber,
+        status: "success",
+      },
+      paidAt: newObj.TransactionDate,
+    });
+    res.redirect(`/rooms/${booking.room}`);
   }
 
-  res.status(201).json({
-    success: true,
+  res.status(400).json({
+    success: false,
   });
 });
 
@@ -227,11 +233,11 @@ const deleteBooking = catchAsync(async (req, res, next) => {
 
 // // Payment
 const lipaNaMpesaOnline = catchAsync(async (req, res, next) => {
-  console.log(req.user)
+  console.log(req.user);
   let paymentData = req.paymentData;
   let bookingData = req.bookingData;
-  
-console.log(bookingData)
+
+  console.log(bookingData);
   const credentials = {
     clientKey: process.env.MPESA_CONSUMER_KEY,
     clientSecret: process.env.MPESA_CONSUMER_SECRET,
@@ -245,20 +251,17 @@ console.log(bookingData)
   await mpesa.lipaNaMpesaOnline({
     ...paymentData,
   });
-//  Deleting previous data
-  await Payment.deleteMany({PhoneNumber: Number(bookingData.PhoneNumber)})
+  //  Deleting previous data
+  await Payment.deleteMany({ PhoneNumber: Number(bookingData.PhoneNumber) });
   // This is temporary data
-   await Payment.create({
-     userId: req.user._id,
- ...bookingData
-
-});
+  await Payment.create({
+    userId: req.user._id,
+    ...bookingData,
+  });
   res.status(200).json({
     success: true,
   });
 });
-
-
 
 export {
   newBooking,

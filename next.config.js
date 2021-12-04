@@ -1,7 +1,14 @@
 module.exports = {
   env: {
     MONGODB_URL: "mongodb://127.0.0.1:27017/hotelBooking",
+    DATABASE:
+      "mongodb+srv://humphrey:<password>@cluster0.pudlj.mongodb.net/hotelbooking?retryWrites=true&w=majority",
+    DATABASE_PASSWORD: "12database12",
+    MONGODB_ONLINE_URL:
+      "mongodb+srv://humphrey:12database12@cluster0.pudlj.mongodb.net/hotelbooking?retryWrites=true&w=majority",
 
+    // NEXT_AUTH
+    NEXTAUTH_UR: "https://hkhotelbooking.vercel.app",
     // CLOUDINARY
     CLOUDINARY_CLOUD_NAME: "kibethh",
     CLOUDINARY_API_KEY: "247797832247976",
@@ -18,7 +25,7 @@ module.exports = {
     MPESA_CONSUMER_SECRET: "ThzdZ6IwdvgPWmbl",
     TOKEN_URL:
       "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
-    CallBackURL: "https://da87-197-181-162-156.ngrok.io",
+    CallBackURL: "https://hkhotelbooking.vercel.app",
     InitiatorName: "testapi",
     InitiatorPassword: "Safaricom999!",
     PartyA: 600999,

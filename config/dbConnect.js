@@ -5,7 +5,12 @@ const dbConnect = () => {
     return;
   }
 
-  const DB = process.env.MONGODB_URL;
+  // const DB = process.env.MONGODB_URL;
+
+  const DB = process.env.DATABASE.replace(
+    "<PASSWORD>",
+    process.env.DATABASE_PASSWORD
+  );
 
   mongoose
     .connect(DB, {

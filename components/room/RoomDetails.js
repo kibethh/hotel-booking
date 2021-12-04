@@ -15,6 +15,8 @@ import {
   getBookedDates,
 } from "../../redux/actions/bookingActions";
 import { CHECK_BOOKING_RESET } from "../../redux/constants/bookingConstants";
+import { PAYMENT_REQUEST } from "../../redux/constants/paymentConstants";
+
 // import { dataIntoReqbody } from "../../middlewares/paymentData";
 // import {
 //   lipaNaMpesaOnline,
@@ -71,9 +73,12 @@ const RoomDetails = () => {
       );
     }
   };
-  
-  const newBookingHandler = async () => {
-    
+
+  const newBookingHandler = async (e) => {
+    e.target.innerHTML = "TRANSACTION INITIATED...";
+    e.target.disabled = "true";
+    setTimeout(() => (e.target.hidden = "true"), 2000);
+
     try {
       const PhoneNumber = "254" + phone.slice(1);
 
@@ -141,15 +146,12 @@ const RoomDetails = () => {
     }
   };
 
-  
   useEffect(() => {
     dispatch(getBookedDates(roomId));
-    if(error){
-
-    toast.error(error);
-    dispatch(clearErrors);
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrors);
     }
-   
   }, [dispatch, error, roomId]);
   return (
     <>
@@ -169,7 +171,7 @@ const RoomDetails = () => {
           </div>
           <span id="no_of_reviews">({room.numOfReviews} Reviews)</span>
         </div>
-        
+
         <Carousel hover="pause">
           {room.images &&
             room.images.map((image) => (
@@ -230,7 +232,9 @@ const RoomDetails = () => {
               {available && user && (
                 <>
                   <div className="form-group">
-                    <label htmlFor="phone_field">Enter Your Phone Number</label>
+                    <label htmlFor="phone_field">
+                      Enter Your M-PESA Phone Number
+                    </label>
                     <input
                       type="number"
                       id="phone_field"
@@ -243,9 +247,10 @@ const RoomDetails = () => {
                   <button
                     className="btn btn-block py-3 booking-btn"
                     onClick={newBookingHandler}
-                   style={{display:`${phone.length<10?"none":"block"}`}}
+                    style={{
+                      display: `${phone.length < 10 ? "none" : "block"}`,
+                    }}
                   >
-                  
                     Pay To Book
                   </button>
                 </>
