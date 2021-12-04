@@ -104,6 +104,7 @@ const RoomDetails = () => {
         today.getHours().toString() +
         today.getMinutes().toString() +
         today.getSeconds().toString();
+
       const Timestamp = date + time;
 
       let buffer = new Buffer.from(
@@ -121,8 +122,7 @@ const RoomDetails = () => {
         PartyA: PhoneNumber,
         PartyB: 174379,
         PhoneNumber,
-        CallBackURL:
-          "https://hotel-booking-kibethh.vercel.app/api/payment/status",
+        CallBackURL: process.env.CallBackURL + "/api/payment/status",
         AccountReference: "test",
         passKey: process.env.PassKey,
         TransactionDesc: "test",

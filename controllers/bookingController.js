@@ -77,7 +77,7 @@ const newBooking = catchAsync(async (req, res) => {
     });
   }
 
-  res.status(200).json({
+  res.status(201).json({
     success: true,
   });
 });
@@ -233,11 +233,11 @@ const deleteBooking = catchAsync(async (req, res, next) => {
 
 // // Payment
 const lipaNaMpesaOnline = catchAsync(async (req, res, next) => {
-  console.log(req.user);
+  // console.log(req.user);
   let paymentData = req.paymentData;
   let bookingData = req.bookingData;
-
-  console.log(bookingData);
+  // console.log(paymentData);
+  // console.log(bookingData);
   const credentials = {
     clientKey: process.env.MPESA_CONSUMER_KEY,
     clientSecret: process.env.MPESA_CONSUMER_SECRET,
