@@ -7,16 +7,14 @@ const dbConnect = () => {
 
   // const DB = process.env.MONGODB_URL;
 
-  const DB = process.env.DATABASE.replace(
-    "<PASSWORD>",
-    process.env.DATABASE_PASSWORD
-  );
-
   mongoose
-    .connect(DB, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(
+      "mongodb+srv://humphrey:12database12@cluster0.pudlj.mongodb.net/hotelbooking?retryWrites=true&w=majority",
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    )
     .then(() => console.log("connected"));
 };
 
