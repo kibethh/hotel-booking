@@ -140,7 +140,7 @@ const RoomDetails = () => {
 
       const { data } = await axios.post("/api/payment", bookPay, config);
       toast.loading("Transaction Initiated!!");
-      setTimeout(() => router.push("/rooms"), 5000);
+      setTimeout(() => router.push("/"), 5000);
     } catch (error) {
       console.log(error.response);
     }
