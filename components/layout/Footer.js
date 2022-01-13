@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="py-1">
       <p className="text-center mt-1">
-        To Be Named Hotel - 2019-2021, All Rights Reserved
+        Kibethh Hotel - 2019-{new Date().getFullYear()}, All Rights Reserved
       </p>
     </footer>
   );

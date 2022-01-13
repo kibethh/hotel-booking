@@ -271,7 +271,6 @@ const deleteBooking = catchAsync(async (req, res, next) => {
 
 // // Payment
 const lipaNaMpesaOnline = catchAsync(async (req, res, next) => {
-  // console.log(req.user);
   let paymentData = req.paymentData;
   let bookingData = req.bookingData;
   // console.log(paymentData);

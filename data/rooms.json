@@ -14,11 +14,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/1_bzynlv",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590762/bookit/rooms/1_bzynlv.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077323/bookit/rooms/tobi-law-w38wBWIliw4-unsplash_zu7wuq.jpg"
       },
       {
         "public_id": "bookit/rooms/2_s1u52n",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590761/bookit/rooms/2_s1u52n.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077320/bookit/rooms/visualsofdana-VoYzj_ITdog-unsplash_pktnkl.jpg"
       }
     ],
     "category": "King"
@@ -38,7 +38,7 @@
     "images": [
       {
         "public_id": "bookit/rooms/3_quuli7.jpg",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590762/bookit/rooms/3_quuli7.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077317/bookit/rooms/reisetopia-nRS3ClHbNGQ-unsplash_rsuf9c.jpg"
       }
     ],
     "category": "Twins"
@@ -58,7 +58,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/4_sju0ql",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590765/bookit/rooms/4_sju0ql.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077315/bookit/rooms/sidekix-media-f1Rd2HsoKnk-unsplash_rdulc0.jpg"
+      },
+      {
+        "public_id": "bookit/rooms/4_sjv0ql",
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077248/bookit/rooms/edelle-bruton-PJNO2sLlbB8-unsplash_j39nsy.jpg"
       }
     ],
     "category": "King"
@@ -78,11 +82,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/5_jmydt6",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590762/bookit/rooms/5_jmydt6.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077315/bookit/rooms/sidekix-media-f1Rd2HsoKnk-unsplash_rdulc0.jpg"
       },
       {
         "public_id": "bookit/rooms/6_nwmr5f",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590764/bookit/rooms/6_nwmr5f.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077314/bookit/rooms/steven-ungermann-aRT5UCf2MYY-unsplash_djeonv.jpg"
       }
     ],
     "category": "Single"
@@ -102,7 +106,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/7_hshhzq",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590764/bookit/rooms/7_hshhzq.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077311/bookit/rooms/neonbrand-iAftdIcgpFc-unsplash_ymb9yz.jpg"
+      },
+      {
+        "public_id": "bookit/rooms/7_hshizq",
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077273/bookit/rooms/engin-akyurt-7VopMuTM9Ms-unsplash_cgzasm.jpg"
       }
     ],
     "category": "King"
@@ -122,7 +130,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/8_crn0xy",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590765/bookit/rooms/8_crn0xy.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077310/bookit/rooms/roberto-nickson-emqnSQwQQDo-unsplash_ojknfw.jpg"
+      },
+      {
+        "public_id": "bookit/rooms/8_crnpxy",
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077285/bookit/rooms/marvin-meyer-fBdlytm6Hp8-unsplash_njknnp.jpg"
       }
     ],
     "category": "Twins"
@@ -142,7 +154,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/9_konrjf",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590849/bookit/rooms/9_konrjf.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077305/bookit/rooms/ralph-ravi-kayden-zSG-kd-L6vw-unsplash_z3qfej.jpg"
+      },
+      {
+        "public_id": "bookit/rooms/9_konrkf",
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077289/bookit/rooms/ralph-ravi-kayden-FqqiAvJejto-unsplash_fknour.jpg"
       }
     ],
     "category": "Single"
@@ -162,7 +178,11 @@
     "images": [
       {
         "public_id": "bookit/rooms/10_w8w8yi",
-        "url": "https://res.cloudinary.com/bookit/image/upload/v1618590840/bookit/rooms/10_w8w8yi.jpg"
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077304/bookit/rooms/reisetopia-oukA5uMuALg-unsplash_f6jx8z.jpg"
+      },
+      {
+        "public_id": "bookit/rooms/10_w9w9yi",
+        "url": "https://res.cloudinary.com/kibethh/image/upload/v1642077296/bookit/rooms/reisetopia-cbxynt_6Aao-unsplash_kzb8bd.jpg"
       }
     ],
     "category": "Single"
