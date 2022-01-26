@@ -1,4 +1,4 @@
-name: Riverside Project CI
+name: Room Booking CI
 on:
   push:
    branches:
